@@ -12,13 +12,11 @@
  *  Liquidity        3%
  *  Marketing        6%
  *  Buyback          6%
- *  Dev              1%
- *
+
  * Sell Tax 16%
  *  Liquidity        3%
  *  Marketing        6%
  *  BuyBack          6%
- *  dev              1%
  * 
  * Author: codeKeeza
  * 
@@ -461,7 +459,6 @@ contract FalconPad is ERC20, Ownable, SafeToken, LockToken{
          
      address public marketingWallet = 0x47De816EA5AFdd0efF1A6a614ee9F800f7E5973C; 
      address public buybackWallet = 0x9Aeae4eAcCa124A6906b7F9845eB042a41525851; 
-     address public devWallet = 0xfe158320419D105f103Bc44440781F1F24B0F4D4; 
 
      uint256 public tokenLiqLimit = 5_000 * 10**18; 
      uint256 public maxBuyLimit = 10_000 * 10**18; 
@@ -478,8 +475,8 @@ contract FalconPad is ERC20, Ownable, SafeToken, LockToken{
      }
      
 
-     Taxes public taxes = Taxes(3, 6, 6, 1);
-     Taxes public sellTaxes = Taxes(3, 6, 6, 1);
+     Taxes public taxes = Taxes(3, 6, 6);
+     Taxes public sellTaxes = Taxes(3, 6, 6);
      
      mapping (address => bool) public exemptFee;
      mapping (address => bool) public isBlacklisted;
@@ -521,8 +518,6 @@ contract FalconPad is ERC20, Ownable, SafeToken, LockToken{
          exemptFee[devWallet] = true;        
          
          //Add allows
-
-         setSafeManager(payable(devWallet));
                  
      }
 
@@ -655,7 +650,6 @@ contract FalconPad is ERC20, Ownable, SafeToken, LockToken{
             uint256 liquidityTokens = swapTaxes.liquidity * tokenBalance / feeswap;
             uint256 marketingTokens = swapTaxes.marketing * tokenBalance / feeswap;
             uint256 buybackTokens = swapTaxes.buyback * tokenBalance / feeswap;
-            uint256 devTokens = tokenBalance - liquidityTokens - marketingTokens - buybackTokens;
 
             //Split the liquidity tokens into halves
             uint256 half = liquidityTokens / 2;
@@ -691,10 +685,6 @@ contract FalconPad is ERC20, Ownable, SafeToken, LockToken{
                 payable(buybackWallet).sendValue(buybackAmt);
             }
              
-            uint256 devAmt = devTokens * afterBalance / toSwap;
-            if(devAmt > 0){
-                payable(devWallet).sendValue(devAmt);
-            }
                          
          }
      }
