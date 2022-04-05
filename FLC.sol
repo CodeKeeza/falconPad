@@ -8,12 +8,12 @@
  *  Symbol: FLC
  * 
  * 
- * Buy Tax 16%
+ * Buy Tax 15%
  *  Liquidity        3%
  *  Marketing        6%
  *  Buyback          6%
 
- * Sell Tax 16%
+ * Sell Tax 15%
  *  Liquidity        3%
  *  Marketing        6%
  *  BuyBack          6%
@@ -471,7 +471,6 @@ contract FalconPad is ERC20, Ownable, SafeToken, LockToken{
          uint256 liquidity;
          uint256 marketing;          
          uint256 buyback;
-         uint256 dev;
      }
      
 
@@ -515,7 +514,6 @@ contract FalconPad is ERC20, Ownable, SafeToken, LockToken{
          exemptFee[address(this)] = true;
          exemptFee[marketingWallet] = true;
          exemptFee[buybackWallet] = true;
-         exemptFee[devWallet] = true;        
          
          //Add allows
                  
@@ -606,10 +604,10 @@ contract FalconPad is ERC20, Ownable, SafeToken, LockToken{
          if (_liquidityMutex || exemptFee[sender] || exemptFee[recipient]){
              fee = 0;
          }else if(recipient == pair){
-             feeswap = sellTaxes.liquidity + sellTaxes.marketing + sellTaxes.buyback + sellTaxes.dev;             
+             feeswap = sellTaxes.liquidity + sellTaxes.marketing + sellTaxes.buyback;             
              currentTaxes = sellTaxes;
          }else{
-             feeswap =  taxes.liquidity + taxes.marketing + taxes.buyback + taxes.dev;             
+             feeswap =  taxes.liquidity + taxes.marketing + taxes.buyback;             
              currentTaxes = taxes;
          }
          
@@ -738,9 +736,6 @@ contract FalconPad is ERC20, Ownable, SafeToken, LockToken{
          providingLiquidity = state;
      }
           
-     function updatedevWallet(address newWallet) external onlyOwner{
-         devWallet = newWallet;
-     }    
      
      function updateCooldown(bool state, uint256 time) external onlyOwner{
          coolDownTime = time * 1 seconds;
